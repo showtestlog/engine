@@ -824,6 +824,10 @@ void Shell::OnPlatformViewDestroyed() {
   //
   // This incorrect assumption can lead to deadlock.
   rasterizer_->DisableThreadMergerIfNeeded();
+    
+  fml::TaskQueueId raster_task_queue_id = task_runners_.GetRasterTaskRunner()->GetTaskQueueId();
+  auto task_queues = fml::MessageLoopTaskQueues::GetInstance();
+  task_queues->DisposeTasks(raster_task_queue_id);
 
   // Note:
   // This is a synchronous operation because certain platforms depend on
